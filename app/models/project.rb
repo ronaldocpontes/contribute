@@ -13,7 +13,6 @@
 # * *picture_file_size* (+integer+)
 # * *picture_updated_at* (+datetime+)
 # * *user_id* (+integer+)
-# * *payment_account_id* (+string+)
 # * *confirmed* (+boolean+)
 # * *state* (+string+)
 class Project < ActiveRecord::Base
@@ -27,6 +26,8 @@ class Project < ActiveRecord::Base
   include Rails.application.routes.url_helpers
 
   belongs_to :user
+
+  has_one :project_confirmation
   has_many :contributions, conditions: ["status not in (:retry_cancel, :fail, :cancelled)", {retry_cancel: ContributionStatus::RetryCancel, fail: ContributionStatus::Failure, cancelled: ContributionStatus::Cancelled}]
   acts_as_commentable
   has_and_belongs_to_many :groups
@@ -186,6 +187,20 @@ class Project < ActiveRecord::Base
       return true if approval.group.admin_user == current_user
     end
     return false
+  end
+
+  # TODO temp method. Extract all references to payment_account_id out
+  # of project class
+  def payment_account_id
+    if project_confirmation.nil?
+      nil
+    else
+      project_confirmation.payment_account_id
+    end
+  end
+
+  def payment_account_id=(value)
+    self.project_confirmation = ProjectConfirmation.create(payment_account_id: value)
   end
 
   protected

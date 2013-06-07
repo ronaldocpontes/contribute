@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130607101124) do
+ActiveRecord::Schema.define(:version => 20130607130022) do
 
   create_table "amazon_errors", :force => true do |t|
     t.string   "description"
@@ -203,6 +203,15 @@ ActiveRecord::Schema.define(:version => 20130607101124) do
     t.datetime "updated_at",      :null => false
   end
 
+  create_table "project_confirmations", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "payment_account_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "project_confirmations", ["project_id"], :name => "index_project_confirmations_on_project_id"
+
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.string   "short_description"
@@ -217,7 +226,6 @@ ActiveRecord::Schema.define(:version => 20130607101124) do
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
     t.integer  "user_id"
-    t.string   "payment_account_id"
     t.string   "state"
     t.boolean  "confirmed"
   end
