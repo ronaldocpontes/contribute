@@ -13,14 +13,13 @@ FactoryGirl.define do
     state :unconfirmed
 
     factory :active_project do
-      project_confirmation
+      association :project_confirmation
       state :active
     end
 
   end
 
   factory :project_confirmation do
-    project
     payment_account_id '636NI81VD2XQKQTN3Z566GCSMHJACXCQITC83N89SVIZSMJRDS7UUKCX2DUARGVI'
   end
 end
